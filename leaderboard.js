@@ -4,6 +4,8 @@
 // @description Finds your rank on a leaderboard
 // @include     https://www.roblox.com/games/*
 // @include     http://www.roblox.com/games/*
+// @include     https://web.roblox.com/games/*
+// @include     http://web.roblox.com/games/*
 // @version     1
 // @grant       none
 // ==/UserScript==
@@ -11,6 +13,10 @@
 
 var placeID = window.location.pathname.split("/")[2];
 var button = 'btn-full-width btn-control-xs rbx-game-server-join';
+var domain = "https://www.roblox.com";
+if(window.location.toString().indexOf("web.roblox.com") > -1){
+	domain = "https://web.roblox.com";
+}
 var pagesize = 50;
 // 0 today, 1 week, 2 month, 3 all
 var tt = ["Today", "Last week", "Last month", "All time"];
@@ -25,7 +31,7 @@ function getRank(username, pos, points, d, cb)
         }
     }
     $.ajax({
-        'url' : 'https://www.roblox.com/leaderboards/game/json',
+        'url' : domain+'/leaderboards/game/json',
         'type' : 'GET',
         'data' : {
             targetType: 0,
