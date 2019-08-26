@@ -1,4 +1,7 @@
-[
-"gainblox.gg",
-"i just made tons of robux using gainblox.gg on your browser to earn robux!"
-]
+{
+  "type":"blacklist",
+  "list":[
+    "gainblox.gg",
+    "i just made tons of robux using gainblox.gg on your browser to earn robux!"
+  ]
+}
