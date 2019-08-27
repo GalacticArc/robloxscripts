@@ -6,8 +6,8 @@
 local http = game:GetService("HttpService")
 local module = {
 	version = 1; -- Don't touch unless you don't care for updates later on, or are modifying it yourself
-	urls = {
-		"https://raw.githubusercontent.com/GalacticArc/robloxscripts/master/blacklist.json" -- Default primary list, keep this if you want up to date spam filters
+	lists = {
+		"https://raw.githubusercontent.com/GalacticArc/robloxscripts/master/blacklist.json"; -- Default primary list, keep this if you want up to date spam filters
 	};
 	filters = {};
 	setting = {
@@ -18,7 +18,8 @@ local module = {
 		versioncheck = true;
 		-- Whether you want to be warned when theres a new version.
 	};
-	debugmode = true;
+	debugmode = false;
+	-- Put this to true if you want it to output whats happening, otherwise its silent.
 }
 
 function module.print(...)
@@ -38,6 +39,7 @@ end
 -- Processes new filters
 function module.addFilter(j)
 	for _,f in pairs(j.list) do
+		f.text = string.lower(f.text)
 		table.insert(module.filters, f)
 		module.print("Added \"".. f.text.."\" all:".. tostring(f.all or false))
 	end
@@ -48,25 +50,29 @@ function module.update()
 	module.warn("Begin update all filters")
 	local failures = 0
 	module.filters = {}
-	for _, url in pairs(module.urls) do
-		local success, err = pcall(function()
-			local response = http:RequestAsync(
-				{
-					Url = url;
-					Method = "GET";
-				}
-			)
-		 
-			-- Inspect the response table
-			if response.Success then
-				module.addFilter(http:JSONDecode(response.Body))
-				module.print("Loaded filters from ".. url)
-			else
-				module.warn("Error loading filters from ".. url)
-				failures = failures + 1
-			end
-		end)
-
+	for _, data in pairs(module.lists) do
+		if typeof(data) == "string" then
+			local success, err = pcall(function()
+				local response = http:RequestAsync(
+					{
+						Url = data;
+						Method = "GET";
+					}
+				)
+			 
+				-- Inspect the response table
+				if response.Success then
+					module.addFilter(http:JSONDecode(response.Body))
+					module.print("Loaded filters from ".. data)
+				else
+					module.warn("Error loading filters from ".. data)
+					failures = failures + 1
+				end
+			end)
+		elseif typeof(data) == "Instance" then -- Support for requiring module lists
+			local list = require(data)
+			module.addFilter(list)
+		end
 	end
 end
 
