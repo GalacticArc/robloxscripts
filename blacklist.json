@@ -1,7 +1,13 @@
 {
   "type":"blacklist",
   "list":[
-    "gainblox.gg",
-    "i just made tons of robux using gainblox.gg on your browser to earn robux!"
+    {
+      "all": true,
+      "text": "gainblox.gg"
+    },
+    {
+      "text": "i just made tons of robux using gainblox.gg on your browser to earn robux!"
+    }
+    
   ]
 }
